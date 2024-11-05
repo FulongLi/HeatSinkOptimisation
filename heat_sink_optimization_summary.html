@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plate Fin Heat Sink Optimization Summary</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plate Fin Heat Sink Optimization Summary</h1>
+
+    <p>This document provides a summary of the optimization approach for a plate fin heat sink using Python. It includes the mathematical models used for thermal resistance, heat transfer, and fin efficiency, and describes how these models are used in an optimization routine to minimize thermal resistance and heat sink mass.</p>
+
+    <h2>Mathematical Models</h2>
+
+    <h3>1. Elenbaas Number Calculation</h3>
+    <p>The Elenbaas number (<em>El</em>) is used to determine the natural convection heat transfer for the heat sink. It is calculated as:</p>
+    
+    <p>\[
+    El = \frac{\rho^2 \beta g c_p b^4 \Delta T}{\mu k_f L}
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>\( \rho \)</em>: Density of air (kg/m³)</li>
+        <li><em>\( \beta \)</em>: Thermal expansion coefficient for air (1/K)</li>
+        <li><em>\( g \)</em>: Acceleration due to gravity (m/s²)</li>
+        <li><em>\( c_p \)</em>: Specific heat capacity of air (J/kg·K)</li>
+        <li><em>\( b \)</em>: Fin spacing (m)</li>
+        <li><em>\( \Delta T \)</em>: Temperature difference between base plate and ambient (K)</li>
+        <li><em>\( \mu \)</em>: Absolute viscosity of air (kg/s·m)</li>
+        <li><em>\( k_f \)</em>: Thermal conductivity of air (W/m·K)</li>
+        <li><em>\( L \)</em>: Length of the heat sink (m)</li>
+    </ul>
+
+    <h3>2. Heat Transfer Coefficient Calculation</h3>
+    <p>The heat transfer coefficient (<em>h</em>) is given by:</p>
+
+    <p>\[
+    h = \frac{k_f}{b} \left[ \frac{576}{El^2} + \frac{2.873}{El^{1/2}} \right]^{-1/2}
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>\( k_f \)</em>: Thermal conductivity of air (W/m·K)</li>
+        <li><em>\( b \)</em>: Fin spacing (m)</li>
+        <li><em>\( El \)</em>: Elenbaas number</li>
+    </ul>
+
+    <h3>3. Fin Efficiency Calculation</h3>
+    <p>The efficiency of the fins (<em>\( \eta \)</em>) is calculated as:</p>
+
+    <p>\[
+    \eta = \frac{\tanh(m H)}{m H}
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>\( m = \sqrt{\frac{2 h}{k t}} \)</em></li>
+        <li><em>h</em>: Heat transfer coefficient (W/m²·K)</li>
+        <li><em>H</em>: Fin height (m)</li>
+        <li><em>t</em>: Fin thickness (m)</li>
+        <li><em>k</em>: Thermal conductivity of the fin material (W/m·K)</li>
+    </ul>
+
+    <h3>4. Total Surface Area Calculation</h3>
+    <p>The total surface area (<em>A</em>) of the heat sink, including base area and fins, is given by:</p>
+
+    <p>\[
+    A = W L - n L t + 2 n H L \eta
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>W</em>: Width of the heat sink (m)</li>
+        <li><em>L</em>: Length of the heat sink (m)</li>
+        <li><em>H</em>: Height of the fins (m)</li>
+        <li><em>t</em>: Thickness of the fins (m)</li>
+        <li><em>n</em>: Number of fins</li>
+        <li><em>\( \eta \)</em>: Fin efficiency</li>
+    </ul>
+
+    <h3>5. Thermal Resistance Calculation</h3>
+    <p>The thermal resistance (<em>\( R_{ha} \)</em>) is given by:</p>
+
+    <p>\[
+    R_{ha} = \frac{1}{h A}
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>h</em>: Heat transfer coefficient (W/m²·K)</li>
+        <li><em>A</em>: Total surface area of the heat sink (m²)</li>
+    </ul>
+
+    <h3>6. Heat Sink Mass Calculation</h3>
+    <p>The heat sink mass (<em>\( m_h \)</em>) is calculated as:</p>
+
+    <p>\[
+    m_h = \rho (W L t_{bp} + n L H t)
+    \]</p>
+
+    <p>Where:</p>
+    <ul>
+        <li><em>\( \rho \)</em>: Density of the fin material (kg/m³)</li>
+        <li><em>\( t_{bp} \)</em>: Base plate thickness (m)</li>
+    </ul>
+
+    <h2>Optimization Approach</h2>
+
+    <p>The optimization aims to minimize both the thermal resistance (<em>\( R_{ha} \)</em>) and the mass (<em>\( m_h \)</em>) of the heat sink. The fitness function used for optimization is a weighted combination of these two objectives:</p>
+
+    <p>\[
+    F(\theta) = 0.5 \times \frac{R_{ha}}{R_{ha, max}} + 0.5 \times \frac{m_h}{m_{h, max}}
+    \]</p>
+
+    <p>Where <em>\( R_{ha, max} \)</em> and <em>\( m_{h, max} \)</em> are reasonable maximum values used to normalize the objectives. The differential evolution optimization algorithm is used to find the optimal heat sink geometry that minimizes the fitness function.</p>
+
+    <h3>Design Parameters and Bounds</h3>
+    <p>The design parameters are bounded as follows:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Minimum Value</th>
+                <th>Maximum Value</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><em>W</em></td>
+                <td>Base plate width</td>
+                <td>0.05</td>
+                <td>0.20</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td><em>L</em></td>
+                <td>Base plate and fin length</td>
+                <td>0.05</td>
+                <td>0.20</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td><em>t<sub>bp</sub></em></td>
+                <td>Base plate thickness</td>
+                <td>0.002</td>
+                <td>0.01</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td><em>H</em></td>
+                <td>Fin height</td>
+                <td>0.02</td>
+                <td>0.20</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td><em>b</em></td>
+                <td>Fin spacing</td>
+                <td>0.002</td>
+                <td>0.01</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td><em>t</em></td>
+                <td>Fin thickness</td>
+                <td>0.001</td>
+                <td>0.005</td>
+                <td>m</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Optimization Results and Visualization</h2>
+    <p>The optimization is run multiple times to generate a Pareto front, which illustrates the trade-off between thermal resistance and mass of the heat sink. A 3D plot of the optimized heat sink geometry is also generated.</p>
+
+    <h3>Code and Visuals</h3>
+    <p>The Python script uses the <code>scipy.optimize.differential_evolution</code> method for optimization. A combined figure is created to show both the Pareto front and the 3D visualization of the heat sink geometry.</p>
+
+    <h4>Pareto Front Plot</h4>
+    <p>The Pareto front plot shows the relationship between heat sink mass and thermal resistance, allowing for a comparison of trade-offs in the optimization process.</p>
+
+    <h4>3D Heat Sink Geometry Plot</h4>
+    <p>The 3D plot is generated based on the optimal values of the design parameters, showing the structure of the heat sink, including base plate and fins.</p>
+
+    <h2>Conclusion</h2>
+    <p>The plate fin heat sink optimization involves balancing the objectives of minimizing both thermal resistance and mass. By using differential evolution, the optimal geometry for the heat sink is determined, which provides insight into the design trade-offs.</p>
+
+    <p>Feel free to use the code and figures in your GitHub repository for further experimentation and visualization.</p>
+</body>
+</html>
+
