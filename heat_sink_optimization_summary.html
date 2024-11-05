@@ -29,6 +29,7 @@
     </style>
 </head>
 <body>
+    <p><strong>This document is created by Dr. Fulong Li.</strong></p>
     <h1>Plate Fin Heat Sink Optimization Summary</h1>
 
     <p>This document provides a summary of the optimization approach for a plate fin heat sink using Python. It includes the mathematical models used for thermal resistance, heat transfer, and fin efficiency, and describes how these models are used in an optimization routine to minimize thermal resistance and heat sink mass.</p>
@@ -37,7 +38,7 @@
 
     <h3>1. Elenbaas Number Calculation</h3>
     <p>The Elenbaas number (<em>El</em>) is used to determine the natural convection heat transfer for the heat sink. It is calculated as:</p>
-    
+
     <p>\[
     El = \frac{\rho^2 \beta g c_p b^4 \Delta T}{\mu k_f L}
     \]</p>
@@ -198,6 +199,9 @@
     </table>
 
     <h2>Optimization Results and Visualization</h2>
+    <h3>Heat Sink Geometry Reference</h3>
+    <img src="heat_sink_geometry.png" alt="Heat Sink Geometry" style="max-width:100%; height:auto;">
+    <p>Figure: Heat sink geometry used for reference in optimization.</p>
     <p>The optimization is run multiple times to generate a Pareto front, which illustrates the trade-off between thermal resistance and mass of the heat sink. A 3D plot of the optimized heat sink geometry is also generated.</p>
 
     <h3>Code and Visuals</h3>
@@ -214,5 +218,7 @@
 
     <p>Feel free to use the code and figures in your GitHub repository for further experimentation and visualization.</p>
 </body>
+    <h2>Reference</h2>
+    <p><a href="https://docs.lib.purdue.edu/dissertations/AAI3444789/">https://docs.lib.purdue.edu/dissertations/AAI3444789/</a></p>
 </html>
 
