@@ -12,6 +12,8 @@ MU_AIR = 1.95e-5  # Absolute viscosity of air (kg/s·m)
 K_F_AIR = 0.0274  # Thermal conductivity of air (W/m·K)
 K_ALUMINUM = 196  # Thermal conductivity of aluminum (W/m·K)
 RHO_ALUMINUM = 2700  # Density of aluminum (kg/m^3)
+K_COPPER = 380  # Thermal conductivity of copper (W/m·K)
+RHO_COPPER = 8960*0.97  # Density of copper (kg/m^3)
 
 # Step 1: Calculate Elenbaas number
 def elenbaas_number(fin_spacing, fin_length, delta_temp):
@@ -22,7 +24,7 @@ def heat_transfer_coefficient(elenbaas, fin_spacing, k_f=K_F_AIR):
     return (k_f / fin_spacing) * ((576 / elenbaas ** 2) + (2.873 / np.sqrt(elenbaas))) ** (-1 / 2)
 
 # Step 3: Calculate fin efficiency (η)
-def fin_efficiency(h, fin_height, fin_thickness, k=K_ALUMINUM):
+def fin_efficiency(h, fin_height, fin_thickness, k=K_COPPER):
     m = np.sqrt(2 * h / (k * fin_thickness))
     return np.tanh(m * fin_height) / (m * fin_height)
 
@@ -42,7 +44,7 @@ def thermal_resistance(L, W, H, t, b, t_bp, delta_temp):
     h = heat_transfer_coefficient(el, b, k_f=K_F_AIR)
 
     # Step 3: Calculate fin efficiency
-    eta = fin_efficiency(h, H, t, k=K_ALUMINUM)
+    eta = fin_efficiency(h, H, t, k=K_COPPER)
 
     # Step 4: Calculate total surface area
     total_area = total_surface_area(W, L, H, t, b, eta)
@@ -51,7 +53,7 @@ def thermal_resistance(L, W, H, t, b, t_bp, delta_temp):
     return 1 / (h * total_area)
 
 # Step 6: Calculate heat sink mass (m_h)
-def heat_sink_mass(W, L, H, t, t_bp, b, rho=RHO_ALUMINUM):
+def heat_sink_mass(W, L, H, t, t_bp, b, rho=RHO_COPPER):
     n = int((W - t) / (t + b)) + 1  # Number of fins
     return rho * (W * L * t_bp + n * L * H * t)
 
@@ -61,16 +63,16 @@ def fitness(params):
     Rha = thermal_resistance(L, W, H, t, b, t_bp, delta_temp=40)
     mh = heat_sink_mass(W, L, H, t, t_bp, b)
     # Normalize Rha and mh by dividing by their respective maximum values to scale them
-    Rha_norm = Rha / 10.0  # Assume a reasonable maximum value for normalization
-    mh_norm = mh / 5.0     # Assume a reasonable maximum value for normalization
+    Rha_norm = Rha # Assume a reasonable maximum value for normalization
+    mh_norm = mh    # Assume a reasonable maximum value for normalization
     # 50% weight on minimizing mass and 50% on minimizing thermal resistance
     return 0.5 * Rha_norm + 0.5 * mh_norm
 
 # Define bounds for each parameter based on Table 7.1
 bounds = [
-    (0.05, 0.2),    # Length (L) in meters
-    (0.05, 0.2),    # Width (W) in meters
-    (0.02, 0.2),    # Height of fins (H) in meters
+    (0.05, 0.1),    # Length (L) in meters
+    (0.05, 0.1),    # Width (W) in meters
+    (0.02, 0.1),    # Height of fins (H) in meters
     (0.001, 0.005), # Thickness of fins (t) in meters
     (0.002, 0.01),  # Spacing between fins (b) in meters
     (0.002, 0.01)   # Base plate thickness (t_bp) in meters
