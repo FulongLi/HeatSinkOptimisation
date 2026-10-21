@@ -1,0 +1,4 @@
+numpy>=1.19
+scipy>=1.5
+matplotlib>=3.3   # optional, only for HS_main.py --plot
+pytest>=7.0       # tests
