@@ -68,6 +68,7 @@ jobs:
           python-version: '3.12'
       - name: "Validate the capability manifest (explicit set: this manifest plus its aipe.core dependency)"
         run: |
-          python -m pip install --upgrade pip pyyaml jsonschema
+          python -m pip install --upgrade pip
+          python -m pip install -r registry/requirements-dev.txt   # jsonschema[format] is required for the URI format checks
           cd registry/scripts
           python validate.py ../../thermal/aipe.yaml ../../core/aipe.yaml
