@@ -1,4 +1,4 @@
-"""Analytic, limit and regression tests for heatsink_model (run: ``pytest`` from the repo root).
+"""Analytic, limit and regression tests for aipe_thermal.heatsink (run: ``pytest`` from the repo root).
 
 The regression block documents the original HS_main.py objective values next to
 the corrected ones for the same geometry; see CHANGELOG.md for the defect list.
@@ -8,10 +8,13 @@ from __future__ import annotations
 
 import json
 import math
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
-import heatsink_model as hm
+import aipe_thermal.heatsink as hm
 
 # Geometry used for the regression comparison: inside the original bounds, copper
 # (the original script's hard-wired default material).
@@ -343,14 +346,25 @@ def test_settings_validation():
 
 # --------------------------------------------------------------------------- script entry point
 
-def test_hs_main_runs_headless_and_writes_json(tmp_path):
-    import HS_main
+def test_heatsink_frontend_runs_headless_and_writes_json(tmp_path):
+    from aipe_thermal.heatsink import frontend
 
     out = tmp_path / "front.json"
-    rc = HS_main.main(["--quick", "--json", str(out), "--material", "Al-6063-T5", "--no-plot"])
+    rc = frontend.main(["--quick", "--json", str(out), "--material", "Al-6063-T5", "--no-plot"])
     assert rc == 0
     data = json.loads(out.read_text(encoding="utf-8"))
     assert data["n_points"] >= 1 and data["material"] == "Al-6063-T5"
+    assert frontend.main(["--cooling", "forced", "--quick", "--no-plot"]) == 2  # forced convection needs --flow or --flow-bounds
+
+
+def test_hs_main_wrapper_still_runs_the_documented_command(tmp_path):
+    out = tmp_path / "front.json"
+    script = Path(__file__).resolve().parents[1] / "HS_main.py"
+    proc = subprocess.run([sys.executable, str(script), "--quick", "--json", str(out), "--no-plot"],
+                          capture_output=True, text=True, timeout=600)
+    assert proc.returncode == 0, proc.stderr
+    assert "Pareto front" in proc.stdout
+    assert json.loads(out.read_text(encoding="utf-8"))["n_points"] >= 1
 
 
 def _sink_kwargs(g: dict[str, float]) -> dict[str, float]:

@@ -1,0 +1,122 @@
+{
+  "_comment": "AIPE 10 kW DAB, secondary bridge: four C3M0025065K-class devices with the semiconductor-database loss at Tj = 125 degC and database Rth(j-c) (AIPE-Workflows run wf-dab-10kw-first, 2026-10-21); the three comparison options are the assumed geometries of aipe_thermal.cases.dab_10kw.cooling_options(). Run: aipe-thermal cooling-compare --input examples/dab-10kw/cooling-compare-secondary.json --no-electrothermal. Recorded result: liquid 63.04, forced 64.29, natural 79.23 degC maximum junction temperature. SI units; absolute temperatures in degC (or *_K).",
+  "t_ambient_C": 40.0,
+  "devices": [
+    {
+      "name": "secondary-1",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-2",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-3",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-4",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    }
+  ],
+  "options": [
+    {
+      "geometry": {
+        "length": 0.2,
+        "width": 0.2,
+        "fin_height": 0.08,
+        "fin_thickness": 0.002,
+        "fin_gap": 0.008,
+        "base_thickness": 0.008,
+        "material": "Al-6063-T5"
+      },
+      "name": "natural-convection-Al-200x200x88",
+      "emissivity": 0.0,
+      "orientation": "vertical base plate, vertical fins, open channel ends",
+      "kind": "natural"
+    },
+    {
+      "geometry": {
+        "length": 0.1,
+        "width": 0.1,
+        "fin_height": 0.04,
+        "fin_thickness": 0.0015,
+        "fin_gap": 0.003,
+        "base_thickness": 0.006,
+        "material": "Al-6063-T5"
+      },
+      "name": "forced-air-Al-100x100x46-2-fans",
+      "volumetric_flow": null,
+      "fan_curve": [
+        [
+          0.0,
+          50.0
+        ],
+        [
+          0.005,
+          35.0
+        ],
+        [
+          0.009,
+          15.0
+        ],
+        [
+          0.011,
+          0.0
+        ]
+      ],
+      "n_fans": 2,
+      "fan_efficiency": 0.25,
+      "fan_volume_m3_each": 5.4e-05,
+      "fan_mass_kg_each": 0.03,
+      "fan_rated_power_W_each": null,
+      "kind": "forced"
+    },
+    {
+      "length": 0.1,
+      "width": 0.1,
+      "base_thickness": 0.004,
+      "n_channels": 16,
+      "channel_width": 0.003,
+      "channel_height": 0.005,
+      "wall_thickness": 0.0025,
+      "coolant_inlet_C": 45.0,
+      "volumetric_flow": 3.3333333333333335e-05,
+      "name": "liquid-cold-plate-Al-100x100-16-minichannels-water-2lpm",
+      "lid_thickness": 0.003,
+      "material": "Al-6063-T5",
+      "coolant": "water",
+      "pump_efficiency": 0.3,
+      "minor_loss_coefficient": 1.5,
+      "correlation": "auto",
+      "external_loop_volume_m3": 0.0,
+      "external_loop_mass_kg": 0.0,
+      "external_loop_power_W": 0.0,
+      "kind": "liquid"
+    }
+  ]
+}

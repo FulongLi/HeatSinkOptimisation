@@ -1,0 +1,47 @@
+{
+  "_comment": "Electrothermal closure of the TI reference network: primary devices with I_rms = 9.67 A (AIPE waveform), R_DS(on) 75 mOhm at 25 degC with the same-family proxy hot factor 1.70 at 175 degC (assumption, see aipe_thermal.cases.dab_10kw.ASSUMPTIONS), 6.75 W turn-off placeholder, 0.5 K/W sink shared by two devices, 40 degC ambient. Run: aipe-thermal electrothermal --input examples/dab-10kw/electrothermal-primary-ti-reference.json",
+  "sink": {
+    "r_sa": 0.5,
+    "t_ambient_C": 40.0
+  },
+  "tj_initial_C": 50.0,
+  "devices": [
+    {
+      "name": "primary-1",
+      "i_rms_A": 9.67,
+      "f_sw_Hz": 100000.0,
+      "r_jc": 1.1,
+      "r_cs": 0.1,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "rds_on": {
+        "r_ref_ohm": 0.075,
+        "t_ref_C": 25.0,
+        "r_hot_ohm": 0.1275,
+        "t_hot_C": 175.0,
+        "kind": "linear"
+      },
+      "fixed_switching_W": 6.75
+    },
+    {
+      "name": "primary-2",
+      "i_rms_A": 9.67,
+      "f_sw_Hz": 100000.0,
+      "r_jc": 1.1,
+      "r_cs": 0.1,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "rds_on": {
+        "r_ref_ohm": 0.075,
+        "t_ref_C": 25.0,
+        "r_hot_ohm": 0.1275,
+        "t_hot_C": 175.0,
+        "kind": "linear"
+      },
+      "fixed_switching_W": 6.75
+    }
+  ],
+  "settings": {
+    "tol_K": 0.001
+  }
+}
