@@ -1,0 +1,74 @@
+name: tests
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    name: pytest (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install the package with the development extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+          python -m pip list | grep -i -E "numpy|scipy|aipe-thermal"
+
+      - name: Unit, migrated and recorded-run regression tests
+        run: python -m pytest
+
+      - name: Documented commands (README, examples)
+        run: |
+          aipe-thermal --version
+          aipe-thermal network --input examples/dab-10kw/network-ti-reference.json --output ci-out/network.json
+          aipe-thermal electrothermal --input examples/dab-10kw/electrothermal-primary-ti-reference.json --output ci-out/electrothermal.json
+          aipe-thermal cooling-compare --input examples/dab-10kw/cooling-compare-secondary.json --output ci-out/cooling.json --no-electrothermal
+          python -m aipe_thermal heatsink-front --quick --json ci-out/front.json --no-plot
+          python HS_main.py --quick --json ci-out/front-hs-main.json --no-plot
+          python examples/dab_10kw_cooling.py --quick --output ci-out/example
+
+      - name: Keep the command outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cli-outputs-py${{ matrix.python-version }}
+          path: ci-out/
+          if-no-files-found: ignore
+
+  manifest:
+    name: aipe.yaml against the AIPE-Registry validator
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: thermal
+      - uses: actions/checkout@v4
+        with:
+          repository: FulongLi/AIPE-Registry
+          path: registry
+      - uses: actions/checkout@v4
+        with:
+          repository: FulongLi/AIPE-Core
+          path: core
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: "Validate the capability manifest (explicit set: this manifest plus its aipe.core dependency)"
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r registry/requirements-dev.txt   # jsonschema[format] is required for the URI format checks
+          cd registry/scripts
+          python validate.py ../../thermal/aipe.yaml ../../core/aipe.yaml

@@ -1,0 +1,56 @@
+{
+  "_comment": "TI TIDA-010054 reference cross-check (aipe_thermal.cases.dab_10kw.ti_reference_network): two primary C3M0075120K-class devices at the AIPE loss estimate 17.035979 W (Tj = 125 degC) on the 0.5 K/W catalogue heat sink with 0.1 K/W pads, 40 degC ambient. Expected: T_sink = 57.036 degC, T_j = 77.479 degC. The two-stage Foster ladder is ILLUSTRATIVE (sums to the fact-sheet Rth(j-c) = 1.1 K/W); it is not a datasheet Zth. Run: aipe-thermal network --input examples/dab-10kw/network-ti-reference.json",
+  "sink": {
+    "r_sa": 0.5,
+    "t_ambient_C": 40.0,
+    "name": "Ohmite CR201-50VE (0.5 K/W catalogue value)"
+  },
+  "devices": [
+    {
+      "name": "primary-1",
+      "power_W": 17.035979,
+      "r_jc": 1.1,
+      "r_cs": 0.1,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "zth_jc": {
+        "type": "foster",
+        "stages": [
+          {
+            "resistance": 0.6,
+            "time_constant": 0.01
+          },
+          {
+            "resistance": 0.5,
+            "time_constant": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "name": "primary-2",
+      "power_W": 17.035979,
+      "r_jc": 1.1,
+      "r_cs": 0.1,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0
+    }
+  ],
+  "transient": {
+    "device": "primary-1",
+    "power_steps": [
+      [
+        0.0,
+        17.035979
+      ]
+    ],
+    "times": [
+      0.001,
+      0.01,
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  }
+}

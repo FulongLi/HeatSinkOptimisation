@@ -1,0 +1,98 @@
+{
+  "_comment": "Stage A forced-air plate-fin screening of the secondary bridge (AIPE-Workflows run wf-dab-10kw-first, 2026-10-21): seeded differential evolution, extrusion bounds, flow as a design variable, objectives r_th / mass / fan power. Run: aipe-thermal heatsink-pareto --input examples/dab-10kw/stage-a-forced-secondary.json (about 20 s). Recorded: 8 non-dominated candidates, 6 feasible, knee A-001 with R_th = 0.4405 K/W, m = 0.2783 kg, fan 0.294 W.",
+  "devices": [
+    {
+      "name": "secondary-1",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-2",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-3",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    },
+    {
+      "name": "secondary-4",
+      "power_W": 17.446227058701883,
+      "r_jc": 0.45758000000000004,
+      "r_cs": 0.1,
+      "footprint_area_m2": 0.00032,
+      "tj_max_C": 175.0,
+      "tj_design_C": 125.0,
+      "note": "C3M0025065K: database loss at the evaluation Tj, database Rth(j-c)"
+    }
+  ],
+  "t_ambient_C": 40.0,
+  "cooling": "forced",
+  "materials": [
+    "Al-6063-T5"
+  ],
+  "bounds": {
+    "length": [
+      0.08,
+      0.16
+    ],
+    "width": [
+      0.06,
+      0.12
+    ],
+    "fin_height": [
+      0.015,
+      0.05
+    ],
+    "fin_thickness": [
+      0.002,
+      0.004
+    ],
+    "fin_gap": [
+      0.004,
+      0.012
+    ],
+    "base_thickness": [
+      0.004,
+      0.01
+    ]
+  },
+  "volumetric_flow": null,
+  "fan_curve": null,
+  "n_fans": 1,
+  "fan_efficiency": 0.25,
+  "flow_bounds": [
+    0.003,
+    0.015
+  ],
+  "objectives": [
+    "r_th",
+    "mass",
+    "fan_power_W"
+  ],
+  "seed": 1,
+  "n_weights": 5,
+  "n_epsilon": 3,
+  "maxiter": 25,
+  "popsize": 10,
+  "n_flag": 3,
+  "tj_limit_C": 125.0,
+  "emissivity": 0.0,
+  "label": "stage-A-secondary-bridge-forced"
+}

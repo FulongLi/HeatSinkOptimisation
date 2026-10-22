@@ -1,4 +1,5 @@
-"""heatsink_model -- plate-fin heat-sink models for natural and forced convection (SI units).
+# SPDX-License-Identifier: CC-BY-4.0
+"""Plate-fin heat-sink models for natural and forced convection (SI units) -- ``aipe_thermal.heatsink.model``.
 
 Importable, corrected and documented refactor of ``HS_main.py`` (Dr. Fulong Li,
 licensed CC BY 4.0, https://creativecommons.org/licenses/by/4.0/). The original
@@ -9,7 +10,7 @@ the end of this module so that every correction can be regression-tested; see
 All quantities are SI: metres, kilograms, seconds, kelvin for differences,
 ``*_C`` suffixes for absolute temperatures in degrees Celsius, pascal, watt.
 
-Geometry (see ``heat_sink_geometry.png``): a rectangular base plate ``W x L``
+Geometry (see ``docs/heat_sink_geometry.png``): a rectangular base plate ``W x L``
 of thickness ``t_bp`` carries ``n`` straight plate fins of thickness ``t`` and
 height ``H`` running along ``L``. ``L`` is the flow direction for forced
 convection and the vertical direction for natural convection (vertical base,
@@ -51,11 +52,13 @@ from typing import Any, Callable, Sequence
 import numpy as np
 from scipy.optimize import NonlinearConstraint, brentq, differential_evolution
 
+from aipe_thermal.units import validate_ambient_C
+
 __version__ = "1.0.0"
 __license__ = "CC BY 4.0"
 __attribution__ = (
     "Derived from HS_main.py, 'Heat Sink Optimization' by Dr. Fulong Li, CC BY 4.0. "
-    "Changes: see CHANGELOG.md (model corrections, SI refactor, Pareto method, tests)."
+    "Changes: see CHANGELOG.md (model corrections, SI refactor, Pareto method, tests; packaged as aipe_thermal.heatsink in 0.2.0)."
 )
 
 G = 9.80665  # m/s^2
@@ -697,6 +700,7 @@ class OperatingPoint:
     def __post_init__(self) -> None:
         if self.cooling not in ("natural", "forced"):
             raise ValueError("cooling must be 'natural' or 'forced'")
+        self.t_ambient_C = validate_ambient_C(self.t_ambient_C, "t_ambient_C")
         if (self.heat_W is None) == (self.delta_T_K is None):
             raise ValueError("specify exactly one of heat_W or delta_T_K")
         if self.heat_W is not None and self.heat_W <= 0:
